@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Zenith Travel Agency | Reach Your Peak Adventure</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;600;800&display=swap" rel="stylesheet">
+
+  <style>
+  /* Basic Reset and Variables */
+  :root {
+      --primary-color: #00bfff;
+      --secondary-color: #1a1a1a;
+      --background-color: #121212;
+      --text-color: #e0e0e0;
+      --light-text-color: #fff;
+      --font-stack: 'Poppins', sans-serif;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html,body { height: 100%; }
+  body {
+      font-family: var(--font-stack);
+      line-height: 1.6;
+      color: var(--text-color);
+      background-color: var(--background-color);
+      scroll-behavior: smooth;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+  }
+
+  /* Navbar */
+  .navbar {
+      background: rgba(18,18,18,0.95);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+      color: var(--light-text-color);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      height: 64px;
+  }
+  .logo { font-size: 1.5rem; font-weight: 800; letter-spacing: 2px; color: var(--primary-color); }
+  .nav-links { list-style: none; display: flex; gap: 12px; align-items:center; }
+  .nav-links a { color: var(--text-color); text-decoration: none; padding: 0.5rem 0.75rem; font-weight:600; }
+  .nav-links a:hover { color: var(--primary-color); }
+
+  /* anchor offset helper so fixed nav doesn't cover anchors */
+  .anchor-offset { height: 64px; width: 100%; display:block; }
+
+  /* Page container helpers */
+  .page { display: none; min-height: calc(100vh - 64px); padding-bottom: 2rem; }
+  .page.active { display: block; }
+
+  /* Hero (Homepage) */
+  .hero-section {
+      /* --- THIS LINE IS UPDATED --- */
+      background: url('hero-background.jpg') no-repeat center center/cover;
+      min-height: calc(100vh - 64px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      color: var(--light-text-color);
+      position: relative;
+      padding: 2rem;
+  }
+  .hero-section::before { content: ''; position: absolute; inset: 0; background: rgba(0,0,0,0.55); z-index: 1; }
+  .hero-content { position: relative; z-index: 2; max-width: 900px; }
+  .hero-content h1 { font-size: 3.2rem; margin-bottom: 0.5rem; font-weight: 800; }
+  .hero-content p { color: #cfcfcf; margin-bottom: 1.25rem; font-weight:300; font-size:1.125rem; }
+  .cta-button { background: var(--primary-color); color: var(--background-color); padding: 0.85rem 1.2rem; border-radius:8px; text-decoration:none; font-weight:700; }
+
+  /* Sections */
+  .about-section, .locations-section, .destinations-section { padding: 3.5rem 6%; background-color: var(--secondary-color); }
+  .about-section h2, .locations-section h2, .destinations-section h2 { color: var(--primary-color); font-size:2rem; margin-bottom:1rem; }
+  .features { display:flex; gap:1rem; justify-content:center; margin-top:1rem; }
+  .features div { background:#222; padding:1rem 1.25rem; border-radius:8px; color:var(--primary-color); border:1px solid rgba(0,191,255,0.08); }
+
+  /* Location grid (homepage) */
+  .location-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:1rem; margin-top:1rem; max-width:1200px; margin-left:auto; margin-right:auto; }
+  .location-card { display:block; height: 320px; border-radius: 8px; overflow:hidden; position:relative; text-decoration:none; color:var(--light-text-color); transition: transform 0.25s, box-shadow 0.25s; border:1px solid rgba(255,255,255,0.04); cursor:pointer; background: linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.12)); }
+  
+  /* --- THIS 'img' RULE IS NEW --- */
+  .location-media, .location-card img {
+      width:100%; height:100%; object-fit:cover; display:block;
+      filter: brightness(0.7);
+      transition: filter 0.3s;
+  }
+  .location-card:hover { transform:translateY(-6px); box-shadow:0 12px 30px rgba(0,0,0,0.6); }
+  .location-card:hover .location-media,
+  .location-card:hover img {
+      filter: brightness(0.5);
+  }
+
+  .location-title { position:absolute; bottom:20px; left:20px; font-size:1.6rem; font-weight:800; text-shadow:2px 2px 6px rgba(0,0,0,0.7); }
+
+  /* Footer */
+  .footer { padding: 2rem; text-align:center; color:var(--text-color); border-top:1px solid rgba(255,255,255,0.04); }
+
+  /* Jammu & Kashmir page styles */
+  .jk-hero { position:relative; min-height:60vh; display:flex; align-items:center; justify-content:center; text-align:center; color:var(--light-text-color); overflow:hidden; }
+  .jk-media { position:absolute; inset:0; z-index:0; }
+  #jk-video-bg { width:100%; height:100%; object-fit:cover; display:block; filter:brightness(0.5); }
+  .video-overlay { position:absolute; inset:0; background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.6)); z-index:1; }
+  .jk-hero-content { position:relative; z-index:2; padding:3rem 1rem; max-width:1100px; margin:0 auto; }
+  .jk-nav { margin-bottom:1rem; }
+  .back-link { color:var(--light-text-color); text-decoration:none; font-weight:600; display:inline-block; margin-bottom:12px; }
+  .back-link:hover { color:var(--primary-color); }
+  .jk-hero-content h1 { font-size:3rem; color:var(--primary-color); margin-bottom:0.5rem; }
+  .jk-hero-content p { font-size:1.15rem; color:#e6eef6; font-weight:300; }
+
+  .jk-main-content { background:var(--secondary-color); padding:3rem 6%; z-index:3; position:relative; }
+  .jk-section { max-width:1200px; margin:0 auto 2.5rem; text-align:center; }
+  .activity-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:1rem; }
+  .activity-card { background:var(--background-color); padding:1.25rem; border-radius:8px; border:1px solid rgba(255,255,255,0.04); }
+  .activity-icon { font-size:2rem; display:block; margin-bottom:0.5rem; }
+  .destination-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:1rem; }
+  .destination-card { background:var(--secondary-color); border-radius:8px; overflow:hidden; display:flex; flex-direction:column; border:1px solid rgba(255,255,255,0.04); }
+  .card-image { width:100%; height:200px; object-fit:cover; display:block; }
+  .card-content { padding:1rem; color:var(--text-color); }
+  .plans-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:1rem; }
+  .plan-card { background:var(--background-color); padding:1.25rem; border-radius:8px; display:flex; flex-direction:column; border:1px solid rgba(255,255,255,0.04); }
+  .plan-card.featured { border:2px solid var(--primary-color); transform:scale(1.02); box-shadow:0 10px 30px rgba(0,191,255,0.08); }
+  .plan-price { font-size:1.6rem; font-weight:800; color:var(--primary-color); margin:0.5rem 0; }
+
+  .cta-button, .book-button { display:inline-block; background:var(--primary-color); color:var(--background-color); padding:0.6rem 1rem; border-radius:6px; text-decoration:none; font-weight:700; }
+  .book-button { width:100%; text-align:center; }
+
+  /* Responsive tweaks */
+  @media (max-width: 900px) {
+    .hero-content h1 { font-size:2.4rem; }
+    .jk-hero-content h1 { font-size:2.2rem; }
+    .location-card { height:260px; }
+    .card-image { height:160px; }
+    .plans-grid { grid-template-columns: 1fr; }
+    .destination-grid { grid-template-columns: 1fr; }
+  }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="logo">ZENITH</div>
+    <ul class="nav-links" role="menubar">
+      <li role="none"><a role="menuitem" href="#" data-nav="home">Home</a></li>
+      <li role="none"><a role="menuitem" href="#" data-nav="locations">Locations</a></li>
+      <li role="none"><a role="menuitem" href="#" data-nav="about">About</a></li>
+      <li role="none"><a role="menuitem" href="#" data-nav="contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <main id="home-page" class="page active" role="main" aria-labelledby="home-heading">
+
+    <div class="anchor-offset" aria-hidden="true"></div>
+
+    <header class="hero-section" id="home-hero" role="banner" aria-label="Homepage hero">
+      <div class="hero-content">
+        <h1 id="home-heading">ZENITH TRAVEL AGENCY</h1>
+        <p>Your journey to the world's highest peaks and hidden treasures begins here.</p>
+        <a href="#" class="cta-button" data-scroll="contact">BOOK YOUR ADVENTURE</a>
+      </div>
+    </header>
+
+    <section id="about" class="about-section">
+      <h2>Why Travel with Zenith?</h2>
+      <p>At Zenith, we believe travel is more than just a trip—it's an experience that elevates your spirit. We craft bespoke itineraries to stunning locations, ensuring every detail is handled so you can focus on the adventure.</p>
+      <div class="features" role="list">
+        <div role="listitem">Personalized Itineraries</div>
+        <div role="listitem">24/7 Support</div>
+        <div role="listitem">Expert Local Guides</div>
+      </div>
+    </section>
+
+    <section id="locations" class="locations-section" aria-label="Locations">
+      <h2>Explore Our Destinations</h2>
+      <p>From the highest peaks to the most serene beaches, your next adventure is waiting.</p>
+
+      <div class="location-grid" role="list" aria-label="Locations list">
+
+        <a href="#jk" class="location-card" role="listitem" aria-label="Open Jammu & Kashmir" data-target="jk">
+          <img src="kashmir.jpg" alt="Jammu & Kashmir" class="location-media" aria-hidden="true">
+          <div class="location-title">Jammu &amp; Kashmir</div>
+        </a>
+
+        <a href="#kerala" class="location-card" role="listitem" aria-label="Open Kerala" data-target="kerala">
+          <img src="kerala.jpg" alt="Kerala" class="location-media" aria-hidden="true">
+          <div class="location-title">Kerala</div>
+        </a>
+
+        <a href="#rajasthan" class="location-card" role="listitem" aria-label="Open Rajasthan" data-target="rajasthan">
+          <img src="ladakh.jpg" alt="Rajasthan" class.location-media" aria-hidden="true">
+          <div class="location-title">Rajasthan</div>
+        </a>
+
+      </div>
+    </section>
+
+    <div id="contact" class="anchor-offset" aria-hidden="true"></div>
+    <footer class="footer">
+      <p>&copy; 2025 Zenith Travel Agency. Reach the peak of travel.</p>
+      <p>Email: info@zenith.travel | Phone: (555) 123-4567</p>
+    </footer>
+  </main>
+
+  <main id="jk-page" class="page" role="main" aria-labelledby="jk-heading">
+    <header class="jk-hero" role="banner">
+      <div class="jk-media" aria-hidden="true">
+        <video id="jk-video-bg" autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;display:block;">
+          <source src="jk-video.mp4" type="video/mp4">
+        </video>
+        <div class="video-overlay"></div>
+      </div>
+
+      <div class="jk-hero-content">
+        <nav class="jk-nav" aria-label="Jammu and Kashmir navigation">
+          <a href="#" class="back-link" data-back>← Back to Zenith Home</a>
+        </nav>
+        <h1 id="jk-heading">Jammu &amp; Kashmir</h1>
+        <p>The Crown Jewel of India. Your peak adventure awaits.</p>
+      </div>
+    </header>
+
+    <section id="jk-activities" class="jk-main-content jk-section">
+      <h2>Top Activities</h2>
+      <div class="activity-grid">
+        <div class="activity-card">
+          <span class="activity-icon" aria-hidden="true">⛰️</span>
+          <h3>Trekking</h3>
+          <p>Explore the Great Lakes, Tarsar Marsar, and more.</p>
+        </div>
+        <div class="activity-card">
+          <span class="activity-icon" aria-hidden="true">🛶</span>
+          <h3>Shikara Rides</h3>
+          <p>Glide peacefully across the iconic Dal &amp; Nigeen Lakes.</p>
+        </div>
+        <div class="activity-card">
+          <span class="activity-icon" aria-hidden="true">⛷️</span>
+          <h3>Gondola &amp; Skiing</h3>
+          <p>Experience the thrill of Gulmarg's world-famous slopes.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="jk-locations" class="destinations-section jk-section">
+      <h2>Must-See Locations</h2>
+      <div class="destination-grid">
+        
+        <div class="destination-card">
+          <img src="kashmir.jpg" alt="The Valley of Kashmir" class="card-image">
+          <div class="card-content">
+            <h3>The Valley of Kashmir</h3>
+            <p>Experience the calm of Dal Lake, the lush meadows of Gulmarg, and the rich culture of Srinagar.</p>
+            <span class="price">Starts at ₹25,000</span>
+            <a href="#" class="book-button">View Package</a>
+          </div>
+        </div>
+
+        <div class="destination-card">
+          <img src="ladakh.jpg" alt="Mystical Ladakh" class="card-image">
+          <div class="card-content">
+            <h3>Mystical Ladakh</h3>
+            <p>Conquer the high-altitude deserts and breathtaking mountain passes. Witness Pangong Tso.</p>
+            <span class="price">Starts at ₹35,000</span>
+            <a href="#" class="book-button">View Package</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="jk-plans" class="jk-section">
+      <h2>Our Packages</h2>
+      <div class="plans-grid">
+        <div class="plan-card">
+          <h3>The Explorer</h3>
+          <div class="plan-price">₹25,000 <span>/ person</span></div>
+          <ul class="plan-features">
+            <li>5 Days / 4 Nights</li>
+            <li>Srinagar &amp; Gulmarg</li>
+            <li>All Transfers</li>
+            <li>Standard Hotels</li>
+          </ul>
+          <a href="#" class="cta-button">Book Now</a>
+        </div>
+
+        <div class="plan-card featured">
+          <h3>The Zenith Peak</h3>
+          <div class="plan-price">₹45,000 <span>/ person</span></div>
+          <ul class="plan-features">
+            <li>8 Days / 7 Nights</li>
+            <li>Srinagar, Gulmarg &amp; Pahalgam</li>
+            <li>All Transfers &amp; Meals</li>
+            <li>Luxury Houseboat &amp; Hotels</li>
+          </ul>
+          <a href="#" class="cta-button">Book Now</a>
+        </div>
+
+        <div class="plan-card">
+          <h3>The Adventurer</h3>
+          <div class="plan-price">₹35,000 <span>/ person</span></div>
+          <ul class="plan-features">
+            <li>7 Days / 6 Nights</li>
+            <li>Leh &amp; Pangong Tso</li>
+            <li>All Permits</li>
+            <li>Guesthouses &amp; Camps</li>
+          </ul>
+          <a href="#" class="cta-button">Book Now</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>&copy; 2025 Zenith Travel Agency. Reach the peak of travel.</p>
+    </footer>
+  </main>
+
+  <script>
+  (function () {
+    const homePage = document.getElementById('home-page');
+    const jkPage = document.getElementById('jk-page');
+
+    function showView(view, push = true) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      if (view === 'jk') {
+        jkPage.classList.add('active');
+        document.title = 'Zenith Travel | Jammu & Kashmir';
+        if (push) history.pushState({page:'jk'}, 'Jammu & Kashmir', '#jk');
+        const v = document.getElementById('jk-video-bg'); if (v && v.paused) v.play().catch(()=>{});
+      } else {
+        homePage.classList.add('active');
+        document.title = 'Zenith Travel Agency | Reach Your Peak Adventure';
+        if (push) history.pushState({page:'home'}, 'Home', '#home');
+        const v = document.getElementById('jk-video-bg'); if (v && !v.paused) { v.pause(); v.currentTime = 0; }
+      }
+      window.scrollTo({top:0,behavior:'instant'});
+    }
+
+    // Click handling: target switching by data-target OR href fragment
+    document.addEventListener('click', function (e) {
+      const a = e.target.closest('a');
+      if (!a) return;
+
+      // Back link
+      if (a.hasAttribute('data-back')) {
+        e.preventDefault();
+        showView('home');
+        return;
+      }
+
+      // nav links that scroll to home sections
+      const navName = a.getAttribute('data-nav');
+      if (navName) {
+        e.preventDefault();
+        showView('home');
+        setTimeout(() => {
+          const sec = document.getElementById(navName);
+          if (sec) sec.scrollIntoView({behavior:'smooth'});
+        }, 80);
+        return;
+      }
+
+      // contact/cta scroll
+      if (a.getAttribute('data-scroll') === 'contact') {
+        e.preventDefault();
+        showView('home');
+        setTimeout(()=> {
+          const sec = document.getElementById('contact');
+          if (sec) sec.scrollIntoView({behavior:'smooth'});
+        }, 80);
+        return;
+      }
+
+      // Location cards: check data-target or href fragment
+      const target = a.getAttribute('data-target') || a.getAttribute('href') || '';
+      if (a.dataset.target === 'jk' || target.includes('#jk') || target.includes('jammu-kashmir')) {
+        e.preventDefault();
+        showView('jk');
+        return;
+      }
+      if (a.dataset.target === 'kerala' || target.includes('#kerala')) {
+        e.preventDefault();
+        // (No separate view for Kerala yet) - scroll to home and highlight if desired
+        showView('home');
+        setTimeout(()=> {
+          const sec = document.getElementById('locations');
+          if (sec) sec.scrollIntoView({behavior:'smooth'});
+        }, 80);
+        return;
+      }
+      if (a.dataset.target === 'rajasthan' || target.includes('#rajasthan')) {
+        e.preventDefault();
+        showView('home');
+        setTimeout(()=> {
+          const sec = document.getElementById('locations');
+          if (sec) sec.scrollIntoView({behavior:'smooth'});
+        }, 80);
+        return;
+      }
+    });
+
+    // Handle browser back/forward
+    window.addEventListener('popstate', function () {
+      const hash = location.hash || '';
+      if (hash === '#jk') {
+        showView('jk', false);
+      } else {
+        showView('home', false);
+      }
+    });
+
+    // Initial load: respect hash if present
+    if (location.hash === '#jk') {
+      showView('jk', false);
+    } else {
+      showView('home', false);
+    }
+  })();
+  </script>
+</body>
+</html>
